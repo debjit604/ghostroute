@@ -116,7 +116,7 @@ Time: 2+ hours
 ```yaml
 Method: Code Archaeology
 Requests: 50-200 targeted
-Success: 40%
+Success: 85%
 Noise: Minimal
 Intelligence: Reads source code
 Finds: Hidden admin panels, DB exports
