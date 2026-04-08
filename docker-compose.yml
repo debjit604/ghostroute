@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  ghostroute:
+    build: .
+    container_name: ghostroute-pro
+    volumes:
+      - ./reports:/app/reports
+    command: --target https://example.com --quick --output /app/reports/report.txt
+    network_mode: host
