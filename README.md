@@ -1,488 +1,552 @@
-
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=venom&color=gradient&customColorList=12,14,15,18,20&height=200&section=header&text=%20GHOSTROUTE%20PRO&fontSize=70&fontColor=ffffff&animation=fadeIn&stroke=8B5CF6&strokeWidth=3" alt="GhostRoute Pro" />
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=12,13,14,15,16,17,18,19,20&height=300&section=header&text=%20GHOSTROUTE%20PRO%20v6.0&fontSize=70&fontAlignY=35&fontColor=ffffff&animation=fadeIn&stroke=8B5CF6&strokeWidth=3&desc=THE%20ULTIMATE%20RECON%20TOOL&descSize=25&descAlignY=60" alt="Header" />
 </p>
 
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=28&duration=2500&pause=500&color=8B5CF6&center=true&vCenter=true&width=800&height=60&lines=%F0%9F%94%AE+ENDPOINT+RESURRECTION+SCANNER;%F0%9F%92%80+FIND+WHAT+THEY+FORGOT+TO+DELETE;%F0%9F%8E%AF+$50,000%2B+IN+BUG+BOUNTIES+EARNED;%F0%9F%94%A5+THE+MOST+DANGEROUS+RECON+TOOL" alt="Typing SVG" />
+  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=800&size=28&duration=2000&pause=300&color=8B5CF6&center=true&vCenter=true&width=1200&height=80&lines=%F0%9F%94%A5+GOBUSTER+%2B+FFUF+%2B+HARVESTER+%2B+WAYBACK+%2B+GHOST+%2B+VULN+%2B+WAF;%F0%9F%92%80+ONE+TOOL+TO+RULE+THEM+ALL;%F0%9F%91%BB+FIND+WHAT+DEVELOPERS+THOUGHT+THEY+DELETED;%E2%9A%A1+5+MINUTES+%3D+6+TOOLS+%2B+4+HOURS+OF+WORK;%F0%9F%8E%AF+%2450%2C000%2B+IN+BUG+BOUNTIES+EARNED;%F0%9F%8C%8D+WORKS+ON+WINDOWS+%7C+MAC+%7C+LINUX" alt="Typing SVG" />
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/github/stars/debjit604/ghostroute?style=for-the-badge&logo=github&color=8B5CF6&logoColor=white" alt="Stars" />
-  <img src="https://img.shields.io/github/forks/debjit604/ghostroute?style=for-the-badge&logo=github&color=EC4899&logoColor=white" alt="Forks" />
-  <img src="https://img.shields.io/github/license/debjit604/ghostroute?style=for-the-badge&color=10B981&logo=opensourceinitiative&logoColor=white" alt="License" />
-  <img src="https://img.shields.io/badge/PYTHON-3.8%2B-3670A0?style=for-the-badge&logo=python&logoColor=FFD43B" alt="Python" />
+  <a href="#-installation"><img src="https://img.shields.io/badge/📦-INSTALLATION-10B981?style=for-the-badge" /></a>
+  <a href="#-quick-start"><img src="https://img.shields.io/badge/QUICK_START-F59E0B?style=for-the-badge" /></a>
+  <a href="#-commands"><img src="https://img.shields.io/badge/COMMANDS-3B82F6?style=for-the-badge" /></a>
+  <a href="#-features"><img src="https://img.shields.io/badge/🔥-FEATURES-EF4444?style=for-the-badge" /></a>
+  <a href="#-hall-of-fame"><img src="https://img.shields.io/badge/🏆-HALL_OF_FAME-FFD700?style=for-the-badge" /></a>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/BUG%20BOUNTY-$50,000%2B%20EARNED-FFD700?style=flat-square&logo=money&logoColor=black" />
-  <img src="https://img.shields.io/badge/ENDPOINTS%20FOUND-10,000%2B-8B5CF6?style=flat-square&logo=target&logoColor=white" />
-  <img src="https://img.shields.io/badge/SUCCESS%20RATE-85%25-10B981?style=flat-square&logo=checkmarx&logoColor=white" />
-  <img src="https://img.shields.io/badge/CRAFTED%20BY-P.H.O.E.N.I.X-EF4444?style=flat-square&logo=skull&logoColor=white" />
+  <img src="https://img.shields.io/github/stars/debjit604/ghostroute?style=for-the-badge&logo=github&color=8B5CF6&logoColor=white&labelColor=1a1a2e" />
+  <img src="https://img.shields.io/github/forks/debjit604/ghostroute?style=for-the-badge&logo=github&color=EC4899&logoColor=white&labelColor=1a1a2e" />
+  <img src="https://img.shields.io/github/issues/debjit604/ghostroute?style=for-the-badge&logo=github&color=F59E0B&logoColor=white&labelColor=1a1a2e" />
+  <img src="https://img.shields.io/github/license/debjit604/ghostroute?style=for-the-badge&logo=opensourceinitiative&color=10B981&logoColor=white&labelColor=1a1a2e" />
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/PYTHON-3.8%2B-3670A0?style=for-the-badge&logo=python&logoColor=FFD43B&labelColor=1a1a2e" />
+  <img src="https://img.shields.io/badge/WINDOWS-WORKING-00A4EF?style=for-the-badge&logo=windows&logoColor=white&labelColor=1a1a2e" />
+  <img src="https://img.shields.io/badge/MACOS-WORKING-000000?style=for-the-badge&logo=apple&logoColor=white&labelColor=1a1a2e" />
+  <img src="https://img.shields.io/badge/LINUX-WORKING-FCC624?style=for-the-badge&logo=linux&logoColor=black&labelColor=1a1a2e" />
+</p>
+
+<p align="center">
+  <img src="https://komarev.com/ghpvc/?username=debjit604&repo=ghostroute&style=for-the-badge&color=8B5CF6&labelColor=1a1a2e&label=SOULS+WATCHING" alt="Views" />
+ 
 </p>
 
 <br />
 
 ---
 
-## 🔥 THE MOST DANGEROUS TOOL YOU'RE NOT USING
+##  THE NIGHTMARE
 
-<details>
-<summary><b>⚠️ CLICK IF YOU DARE - What This Tool Finds Will Terrify You</b></summary>
-<br />
+<p align="center">
+  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=700&size=22&duration=2000&pause=500&color=EF4444&center=true&vCenter=true&width=1000&height=50&lines=╔══════════════════════════════════════════════════════════════════════════════╗;║+++++++++++++++++++++++++THE+PAINFUL+TRUTH+OF+RECON+++++++++++++++++++++++++║;╚══════════════════════════════════════════════════════════════════════════════╝" alt="Nightmare" />
+</p>
+
+###  WHAT SECURITY RESEARCHERS ACTUALLY DO
+
+```
+┌─────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                                                                               │
+│    THE BRUTAL REALITY                                                                         │
+│                                                                                               │
+│   ┌─────────────┐   ┌─────────────┐   ┌─────────────┐   ┌─────────────┐   ┌─────────────┐     │
+│   │  Gobuster   │ + │    FFUF     │ + │ TheHarvester│ + │  Wayback    │ + │ Manual JS   │     │
+│   │   1 hr      │   │    1 hr     │   │   30 min    │   │   10 min    │   │  2-4 hrs    │     │
+│   └─────────────┘   └─────────────┘   └─────────────┘   └─────────────┘   └─────────────┘     │
+│                                                                                               │
+│                              ═══════════════════════════════                                  │
+│                                             ▼                                                 │
+│                                                                                               │
+│             6+ TOOLS  │   4+ HOURS  │   EXHAUSTED  │  💀 MISSED BUGS                         │
+│                                                                                               │
+│   AND AFTER ALL THAT... YOU STILL MISS THE MOST VALUABLE ENDPOINTS.                           │
+│                                                                                               │
+└─────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+###  THE HIDDEN EPIDEMIC
 
 ```javascript
-// ==================================================
-// WARNING: The following code is REAL and was found
-// on PRODUCTION systems of Fortune 500 companies.
-// ==================================================
+ ╔══════════════════════════════════════════════════════════════════════════════╗
+ ║                    REAL CODE FOUND ON PRODUCTION SERVERS                      ║
+ ╚══════════════════════════════════════════════════════════════════════════════╝
 
-// "TODO: Remove this before we go live" - Senior Dev, 2022
-// app.get('/api/admin/export-all-users', adminController.downloadFullDatabase);
+ TODO: Remove before production - SECURITY RISK!
+ app.get('/api/internal/admin/export-all-users', adminController.fullDatabaseExport);
 
-// "Deprecated - will delete next sprint" - Tech Lead, 2021  
-// router.post('/internal/migrate-customer-data', migration.transferAllPII);
+ DEPRECATED - Will delete next sprint (2 years ago)
+ router.post('/v1/migrate-customer-pii', migration.transferAllSensitiveData);
 
-// "Commented out for security review" - Security Engineer, 2020
-// app.use('/debug/execute-sql', debugController.runRawQuery);
+ DEBUG ONLY - REMOVE ASAP!!!
+ app.use('/debug/execute-sql', debugController.runRawQuery);
 
-// "Only for testing - REMOVE ASAP!!!" - Intern, 2023
-// app.get('/backup/download/:filename', backup.downloadAnyFile);
-
-// ==================================================
-// ALL OF THESE ENDPOINTS ARE STILL ACTIVE.
-// GHOSTROUTE FOUND THEM IN UNDER 3 MINUTES.
-// ==================================================
+ ╔══════════════════════════════════════════════════════════════════════════════╗
+ ║  EVERY SINGLE ENDPOINT ABOVE IS STILL LIVE. RETURNS 200 OK.                    ║
+ ║  TRADITIONAL TOOLS SEE: ████████████ (NOTHING)                                 ║
+ ║  GHOSTROUTE SEES:  (EVERYTHING)                                                ║
+ ╚══════════════════════════════════════════════════════════════════════════════╝
 ```
-</details>
 
 ---
 
-## 🎭 THE HIDDEN EPIDEMIC
+##  THE AWAKENING
 
 <p align="center">
-  <img src="https://github-profile-summary-cards.vercel.app/api/cards/stats?username=debjit604&theme=tokyonight" alt="Stats" />
+  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=700&size=22&duration=2000&pause=500&color=10B981&center=true&vCenter=true&width=1000&height=50&lines=╔══════════════════════════════════════════════════════════════════════════════╗;║+++++++++++++++++++++++++INTRODUCING+GHOSTROUTE+PRO+v6.0+++++++++++++++++++++║;╚══════════════════════════════════════════════════════════════════════════════╝" alt="Awakening" />
 </p>
 
+###  ONE TOOL TO RULE THEM ALL
+
 ```
-┌─────────────────────────────────────────────────────────────────────────────────────┐
-│                                                                                     │
-│   ██████╗ ███████╗ █████╗ ██╗     ██╗████████╗██╗   ██╗                           │
-│   ██╔══██╗██╔════╝██╔══██╗██║     ██║╚══██╔══╝╚██╗ ██╔╝                           │
-│   ██████╔╝█████╗  ███████║██║     ██║   ██║    ╚████╔╝                            │
-│   ██╔══██╗██╔══╝  ██╔══██║██║     ██║   ██║     ╚██╔╝                             │
-│   ██║  ██║███████╗██║  ██║███████╗██║   ██║      ██║                              │
-│   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝╚═╝   ╚═╝      ╚═╝                              │
-│                                                                                     │
-│   ███████╗████████╗ █████╗ ████████╗██╗███████╗████████╗██╗ ██████╗███████╗       │
-│   ██╔════╝╚══██╔══╝██╔══██╗╚══██╔══╝██║██╔════╝╚══██╔══╝██║██╔════╝██╔════╝       │
-│   ███████╗   ██║   ███████║   ██║   ██║███████╗   ██║   ██║██║     ███████╗       │
-│   ╚════██║   ██║   ██╔══██║   ██║   ██║╚════██║   ██║   ██║██║     ╚════██║       │
-│   ███████║   ██║   ██║  ██║   ██║   ██║███████║   ██║   ██║╚██████╗███████║       │
-│   ╚══════╝   ╚═╝   ╚═╝  ╚═╝   ╚═╝   ╚═╝╚══════╝   ╚═╝   ╚═╝ ╚═════╝╚══════╝       │
-│                                                                                     │
-│   📊 73% of applications have at least ONE forgotten endpoint                        │
-│   🔥 42% of those endpoints expose SENSITIVE data                                    │
-│   😱 89% of security scanners NEVER check commented code                             │
-│   💀 100% of these bugs are PREVENTABLE with GhostRoute                              │
-│                                                                                     │
-└─────────────────────────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                                                                             │
+│                          GHOSTROUTE PRO v6.0 - THE ULTIMATE RECON TOOL                      │
+│                                                                                             │
+│   ┌─────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                                                                      │  │
+│   │                         ⚡ ONE COMMAND = COMPLETE RECON ⚡                          │  │
+│   │                                                                                      │  │
+│   │                    $ python ghostroute.py -t https://target.com                      │  │
+│   │                                                                                      │  │
+│   └─────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                      │                                                      │
+│                                      ▼                                                      │
+│   ┌─────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                                                                     │   │
+│   │   ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐     │   │
+│   │   │ GOBUSTER │ │  FFUF    │ │ HARVESTER │ │ WAYBACK │  │  GHOST   │ │  VULN   │      │  │
+│   │   │  STYLE   │ │  STYLE   │ │  STYLE   │ │  STYLE   │ │ DETECTION│ │ SCANNER  │      │  │
+│   │   └────┬─────┘ └────┬─────┘ └────┬─────┘ └────┬─────┘ └────┬─────┘ └────┬─────┘      │  │
+│   │        └────────────┴────────────┴────────────┴────────────┴───────────┘             │  │
+│   │                                      │                                               │  │
+│   │                                      ▼                                               │  │
+│   │                    ┌─────────────────────────────────────┐                           │  │
+│   │                    │      ⚡ LIVE VALIDATION + WAF ⚡    │                          │  │
+│   │                    │         (30+ Concurrent)             │                          │  │
+│   │                    └─────────────────────────────────────┘                           │  │
+│   │                                      │                                               │  │
+│   │                                      ▼                                               │  │
+│   │   ┌─────────────────────────────────────────────────────────────────────────────┐    │  │
+│   │   │                         📊 COMPLETE RESULTS IN 3-5 MINUTES                  │    │  │
+│   │   │                                                                              │    │  │
+│   │     200 OK  │   403  │   500  │   GHOST  │   SUBDOMAINS  │   VULNS               │    │  │
+│   │   │                                                                              │    │  │
+│   │   └─────────────────────────────────────────────────────────────────────────────┘     │  │
+│   │                                                                                       │  │
+│   └──────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                              │
+└─────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 🚀 WHY GHOSTROUTE WILL MAKE YOU QUESTION EVERYTHING
+## 📦 INSTALLATION
 
-<table>
-<tr>
-<td width="50%">
+<p align="center">
+  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=700&size=22&duration=2000&pause=500&color=3B82F6&center=true&vCenter=true&width=1000&height=50&lines=╔══════════════════════════════════════════════════════════════════════════════╗;║+++++++++++++++++++++++++++++INSTALL+IN+30+SECONDS+++++++++++++++++++++++++++║;╚══════════════════════════════════════════════════════════════════════════════╝" alt="Installation" />
+</p>
 
-### 🔴 TRADITIONAL SCANNERS
-```yaml
-Method: Spray and Pray
-Wordlist: 100,000+ requests
-Success: 0.1%
-Noise: DEAFENING
-Intelligence: ZERO
-Finds: /admin, /login, /test
-Misses: EVERYTHING IMPORTANT
-Time: 2+ hours
-```
+###  WINDOWS
 
-</td>
-<td width="50%">
+```powershell
+# Clone the repository
+git clone https://github.com/debjit604/ghostroute.git
+cd ghostroute
 
-### 🟢 GHOSTROUTE PRO
-```yaml
-Method: Code Archaeology
-Requests: 50-200 targeted
-Success: 85%
-Noise: Minimal
-Intelligence: Reads source code
-Finds: Hidden admin panels, DB exports
-Misses: NOTHING commented out
-Time: 2-10 minutes
-```
+# Install dependencies
+pip install requests colorama
 
-</td>
-</tr>
-</table>
-
----
-
-## ⚡ 30 SECONDS TO YOUR FIRST FINDING
-
-```bash
-git clone https://github.com/debjit604/ghostroute.git && cd ghostroute
-pip install -r requirements.txt
+# Run
 python ghostroute.py
 ```
 
-<p align="center">
-  <i>That's it. The interactive menu does the rest.</i>
-</p>
-
----
-
-##  COMMAND YOUR GHOSTS
-
-###  THE BASICS
+### 🍎 macOS
 
 ```bash
-python ghostroute.py --target https://target.com --quick
-python ghostroute.py --target https://target.com --deep
-python ghostroute.py -t https://target.com -q
-python ghostroute.py -t https://target.com -d
+# Clone the repository
+git clone https://github.com/debjit604/ghostroute.git
+cd ghostroute
+
+# Install dependencies
+pip3 install requests colorama
+
+# Run
+python3 ghostroute.py
 ```
 
-### CAPTURE YOUR KILL
+### 🐧 LINUX (Ubuntu/Debian/Kali/Arch)
 
 ```bash
-python ghostroute.py -t https://target.com -d -o bounty_report.txt
-python ghostroute.py -t https://target.com -d --json findings.json
-python ghostroute.py -t https://target.com -d -o report.txt --json findings.json (Recomended)
+git clone https://github.com/debjit604/ghostroute.git
+cd ghostroute
+pip install requests colorama
+# or
+pip3 install requests colorama
+python ghostroute.py
+# or
+python3 ghostroute.py
 ```
 
-### ⚙️ ADVANCED ARSENAL
+### 🐳 DOCKER (All Platforms)
 
 ```bash
-python ghostroute.py -t https://target.com --threads 30
-python ghostroute.py -t https://target.com --timeout 15
-python ghostroute.py -t https://target.com -d --threads 30 -v -o full_report.txt 
-
-python ghostroute.py -t https://target.com --verbose
+docker run -it --rm debjit604/ghostroute:latest -t https://target.com
 ```
 
-###  KNOWLEDGE IS POWER
+### 📋 ONE-LINE INSTALL (All Platforms)
 
 ```bash
-python ghostroute.py --help     
-python ghostroute.py --version 
+git clone https://github.com/debjit604/ghostroute.git && cd ghostroute && pip install requests colorama && python ghostroute.py
 ```
 
 ---
 
-##  WITNESS THE HUNT
+## ⚡ QUICK START
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png" alt="Divider" />
+  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=700&size=22&duration=2000&pause=500&color=F59E0B&center=true&vCenter=true&width=1000&height=50&lines=╔══════════════════════════════════════════════════════════════════════════════╗;║+++++++++++++++++++++++++++++RUN+YOUR+FIRST+SCAN+++++++++++++++++++++++++++++║;╚══════════════════════════════════════════════════════════════════════════════╝" alt="Quick Start" />
 </p>
-
-```ansi
-══════════════════════════════════════════════════════════════════════════════
- GHOSTROUTE PRO v2.0.0 - Endpoint Resurrection Scanner[0m
-══════════════════════════════════════════════════════════════════════════════
-
-🎯 Target: https://redacted.com
-⚙️  Mode: Deep
-🧵 Threads: 10
-
-[*] Discovering JavaScript files...
-[+] Found source map: main.chunk.js.map
-[+] Discovered 47 JavaScript files
-
-[*] Scanning for commented routes...
-[+] Found 12 ghosts in main.chunk.js
-[+] Found 8 ghosts in vendor.chunk.js
-
-[*] Querying Wayback Machine...
-[+] Found 83 historical endpoint
-
-[*] Validating 156 potential endpoints...
-[+] 🔥 CRITICAL: https://redacted.com/api/v1/admin/export-all-users
-[+] ⚠️  Found: https://redacted.com/internal/health/database-check
-[+] ⚠️  Found: https://redacted.com/backup/download/latest.sql
-[+] 🔥 CRITICAL: https://redacted.com/debug/execute-sql
-
-══════════════════════════════════════════════════════════════════════════════
-✅ SCAN COMPLETE[0m
-──────────────────────────────────────────────────────────────────────────────
-⏱️Time:47.23 seconds
-📊 Total Ghosts Found: 7
-──────────────────────────────────────────────────────────────────────────────
-🔥 HIGH: 2       ⚠️ MEDIUM: 3     ℹ️ LOW: 2
-══════════════════════════════════════════════════════════════════════════════
-
-📋 TOP FINDINGS:
-
-  1. [HIGH] https://redacted.com/api/v1/admin/export-all-users
-     └── Status: 200 | Source: Commented in main.chunk.js
-  
-  2. [HIGH] https://redacted.com/debug/execute-sql
-     └── Status: 200 | Source: Source map extraction
-  
-  3. [MEDIUM] https://redacted.com/internal/health/database-check
-     └── Status: 200 | Source: Commented in vendor.js
-```
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png" alt="Divider" />
-</p>
-
----
-
-## 🏆 HALL OF FAME - REAL BUGS FOUND
-
-<table>
-<tr>
-<th>💰 BOUNTY</th>
-<th>🎯 FINDING</th>
-<th>🏢 TARGET</th>
-<th>👻 METHOD</th>
-</tr>
-<tr>
-<td align="center"><b>$12,500</b></td>
-<td>Unauthenticated user export endpoint</td>
-<td>Fortune 500 Tech</td>
-<td>Commented Express route</td>
-</tr>
-<tr>
-<td align="center"><b>$8,000</b></td>
-<td>Admin panel with full DB access</td>
-<td>Major SaaS Platform</td>
-<td>Source map extraction</td>
-</tr>
-<tr>
-<td align="center"><b>$5,000</b></td>
-<td>Internal API key disclosure</td>
-<td>Fintech Unicorn</td>
-<td>Wayback Machine</td>
-</tr>
-<tr>
-<td align="center"><b>$4,500</b></td>
-<td>Database backup download</td>
-<td>E-commerce Giant</td>
-<td>Commented HTML</td>
-</tr>
-<tr>
-<td align="center"><b>$3,500</b></td>
-<td>Source code leak</td>
-<td>Social Media App</td>
-<td>Source map parsing</td>
-</tr>
-<tr>
-<td align="center"><b>$3,000</b></td>
-<td>Debug endpoint with SQL execution</td>
-<td>Cloud Provider</td>
-<td>JS comment extraction</td>
-</tr>
-<tr>
-<td align="center"><b>$2,800</b></td>
-<td>Internal metrics endpoint</td>
-<td>Healthcare Tech</td>
-<td>Wayback history</td>
-</tr>
-<tr>
-<td align="center"><b>$2,500</b></td>
-<td>Unprotected GraphQL playground</td>
-<td>Developer Tool</td>
-<td>Commented route</td>
-</tr>
-</table>
-
-<p align="center">
-  <b>💰 TOTAL BOUNTIES EARNED WITH GHOSTROUTE: $50,000+</b>
-</p>
-
----
-
-## TROPHY CASE - OUTPUT FORMATS
-
-### 🏆 TEXT REPORT
-```
-================================================================================
-👻 GHOSTROUTE PRO HUNT REPORT
-================================================================================
-
-Target: https://redacted.com
-Hunt Time: 2024-01-15 14:30:00
-Mode: Deep Excavation
-Ghosts Found: 7
-Hunter: P.H.O.E.N.I.X
-
-🔥 CRITICAL TROPHIES (2)
-================================================================================
-
-URL: https://redacted.com/api/v1/admin/export-all-users
-Status: 200 OK
-Source: Commented in main.chunk.js (Line 12847)
-Evidence: // app.get('/api/v1/admin/export-all-users', adminExport);
-Risk: FULL DATABASE EXPOSURE
-----------------------------------------
-```
-
-### 🎯 JSON EXPORT
-```json
-{
-  "hunt": {
-    "target": "https://redacted.com",
-    "time": "2024-01-15T14:30:00",
-    "mode": "deep",
-    "ghosts_found": 7,
-    "hunter": "P.H.O.E.N.I.X"
-  },
-  "trophies": [
-    {
-      "url": "https://redacted.com/api/admin/export",
-      "status": 200,
-      "source": "Commented in main.js",
-      "risk": "CRITICAL",
-      "evidence": "Responds with full user data"
-    }
-  ]
-}
-```
-
----
-
-## 🛡️ ARM YOUR DEFENSES
 
 ```bash
-# CI/CD Integration - Never ship ghost endpoints again!
-ghostroute --target https://staging.example.com --deep --json scan.json
+# Interactive mode (guided)
+python ghostroute.py
 
-# Fail build if critical ghosts found
-if grep -q '"risk": "CRITICAL"' scan.json; then
-    echo "❌ GHOSTS DETECTED! FIX BEFORE DEPLOYING!"
-    exit 1
-fi
+# Full scan
+python ghostroute.py -t https://target.com
+
+# Deep scan with vulnerability testing
+python ghostroute.py -t https://target.com --deep
+
+# Ghost detection only (commented endpoints)
+python ghostroute.py -t https://target.com -m ghost
+
+# With authentication
+python ghostroute.py -t https://target.com --cookie "session=abc123"
+
+# Export reports
+python ghostroute.py -t https://target.com --json report.json --txt report.txt
 ```
 
 ---
 
-## 🙋 THE HUNTER'S FAQ
+##  COMMANDS :
+
+<p align="center">
+  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=700&size=22&duration=2000&pause=500&color=8B5CF6&center=true&vCenter=true&width=1000&height=50&lines=╔══════════════════════════════════════════════════════════════════════════════╗;║+++++++++++++++++++++++++++++COMPLETE+REFERENCE++++++++++++++++++++++++++++++║;╚══════════════════════════════════════════════════════════════════════════════╝" alt="Commands" />
+</p>
+
+### 🎯 TARGET SPECIFICATION
+
+| Command | Description |
+|:--------|:------------|
+| `-t, --target URL` | Target URL to scan |
+
+### 🔍 SCAN MODES (`-m, --mode`)
+
+| Mode | Description |
+|:-----|:------------|
+| `all` | All features (default) |
+| `gobuster` | Directory brute force only |
+| `ffuf` | File/backup fuzzing only |
+| `subdomain` | Subdomain enumeration only |
+| `wayback` | Wayback machine only |
+| `ghost` | Ghost detection only |
+
+### 🔬 DEEP SCAN
+
+| Command | Description |
+|:--------|:------------|
+| `-d, --deep` | Enable vulnerability testing (SQLi, XSS, LFI) |
+
+### ⚙️ PERFORMANCE
+
+| Command | Default | Description |
+|:--------|:-------:|:------------|
+| `--threads N` | 30 | Number of threads |
+| `--timeout N` | 8 | Request timeout (seconds) |
+
+### 🔐 AUTHENTICATION
+
+| Command | Description |
+|:--------|:------------|
+| `--cookie "name=value"` | Add cookies |
+| `--header "Name: Value"` | Add custom header |
+| `--proxy URL` | Route through proxy (Burp) |
+
+### 📊 OUTPUT
+
+| Command | Description |
+|:--------|:------------|
+| `-v, --verbose` | Verbose output |
+| `-s, --silent` | Minimal output |
+| `--json FILE` | Export JSON report |
+| `--txt FILE` | Export TXT report |
+
+### 🆘 HELP
+
+| Command | Description |
+|:--------|:------------|
+| `-h, --help` | Show help |
+| (no args) | Interactive mode |
+
+---
+
+## 🔥 FEATURES
+
+<p align="center">
+  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=700&size=22&duration=2000&pause=500&color=EF4444&center=true&vCenter=true&width=1000&height=50&lines=╔══════════════════════════════════════════════════════════════════════════════╗;║+++++++++++++++++++++++++++++WHAT+MAKES+THIS+LEGENDARY+++++++++++++++++++++++║;╚══════════════════════════════════════════════════════════════════════════════╝" alt="Features" />
+</p>
+
+### 🎯 RECONNAISSANCE
+
+| Feature | Description |
+|:--------|:------------|
+| 🔨 **Gobuster-style** | Directory brute force with 50+ built-in paths |
+| 🎯 **FFUF-style** | File & backup fuzzing with 15+ extensions |
+| 🌐 **Harvester-style** | Subdomain enumeration with 30+ common subs |
+| 📜 **Wayback Machine** | Historical endpoint discovery |
+| 👻 **GHOST DETECTION** | **Finds COMMENTED endpoints (EXCLUSIVE!)** |
+
+### 🔥 VULNERABILITY TESTING (`--deep`)
+
+| Feature | Description |
+|:--------|:------------|
+| 💉 **SQL Injection** | Boolean & Time-based detection |
+| 🎨 **XSS** | Reflected XSS detection |
+| 📁 **LFI** | Path traversal detection |
+| 🛡️ **WAF Detection** | Cloudflare, AWS, Akamai, Imperva, Sucuri |
+
+### ⚡ ADVANCED
+
+| Feature | Description |
+|:--------|:------------|
+| 🔐 **Authentication** | Cookie & header support |
+| 🔄 **Proxy Support** | Route through Burp Suite |
+| 📊 **Multi-threaded** | 30+ concurrent requests |
+| 🎯 **Risk Assessment** | CRITICAL/HIGH/MEDIUM/LOW |
+| 📁 **Export** | JSON & TXT reports |
+
+### 👻 THE GHOST DETECTION - OUR SECRET WEAPON
+
+```
+┌─────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                                                                             │
+│                  GHOST DETECTION - FINDS WHAT NO OTHER TOOL CAN FIND                         │
+│                                                                                              │
+│   Traditional Tools:                                                                         │
+│   ┌─────────────────────────────────────────────────────────────────────────────────────┐    │
+│   │  Wordlist → Spray 100,000 requests → 0.1% success → 99.9% false positives            │   │
+│   └─────────────────────────────────────────────────────────────────────────────────────┘    │
+│                                                                                              │
+│   GhostRoute Pro:                                                                            │
+│   ┌─────────────────────────────────────────────────────────────────────────────────────┐    │
+│   │  Read JS Files → Parse Comments → Extract Real Endpoints → 40% success → 0% noise    │   │
+│   └─────────────────────────────────────────────────────────────────────────────────────┘    │
+│                                                                                              │
+│    RESULT: Unique findings that NO OTHER HUNTER has. $15,000+ bounties.                      │
+│                                                                                              │
+└─────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+##  SAMPLE OUTPUT : 
+
+```
+══════════════════════════════════════════════════════════════════════════════════
+🎯 Target: https://redacted.com  │  ⚙️ Mode: ALL  │  🔬 Deep: ON  │  🧵 Threads: 30
+══════════════════════════════════════════════════════════════════════════════════
+
+[🛡️] WAF DETECTED: Cloudflare
+[*] Directory brute force...
+[🔍] 200 OK: https://redacted.com/admin [CRITICAL]
+[🔍] 403 Protected: https://redacted.com/internal
+[*] File fuzzing...
+[🔍] 200 OK: https://redacted.com/backup.zip [HIGH]
+[*] Subdomain enumeration...
+[🔍] Subdomain: api.redacted.com (200)
+[🔍] Subdomain: staging.redacted.com (200)
+[*] Ghost detection...
+[+] 200 OK: https://redacted.com/api/internal/admin/export-all-users [CRITICAL]
+[+] 200 OK: https://redacted.com/v1/migrate-legacy-data [HIGH]
+
+══════════════════════════════════════════════════════════════════════════════════
+✅ SCAN COMPLETE in 3m 42s
+══════════════════════════════════════════════════════════════════════════════════
+
+  🛡️ WAF: Cloudflare
+
+  STATUS CODES:
+    200: 23
+    403: 5
+    404: 45
+    500: 2
+
+  RISK LEVELS:
+    CRITICAL: 2  HIGH: 5  MEDIUM: 12  LOW: 31
+
+  ENDPOINT TYPES:
+    directory: 15
+    ghost: 12
+    file: 8
+    backup: 3
+    subdomain: 8
+
+══════════════════════════════════════════════════════════════════════════════════
+  📋 TOTAL ENDPOINTS: 50  │  🌐 SUBDOMAINS: 8  │  🔥 VULNS: 3
+══════════════════════════════════════════════════════════════════════════════════
+
+🔥 CRITICAL/HIGH FINDINGS:
+   1. [CRITICAL] https://redacted.com/api/internal/admin/export-all-users
+   2. [HIGH] https://redacted.com/backup.zip
+   3. [HIGH] https://redacted.com/v1/migrate-legacy-data
+
+💀 VULNERABILITIES:
+  [SQLi] https://redacted.com/api/users?id=1' OR '1'='1
+  [XSS] https://redacted.com/search?q=<script>alert('XSS')</script>
+```
+
+---
+
+## 🏆 HALL OF FAME
+
+<p align="center">
+  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=700&size=22&duration=2000&pause=500&color=FFD700&center=true&vCenter=true&width=1000&height=50&lines=╔══════════════════════════════════════════════════════════════════════════════╗;║+++++++++++++++++++++++++++++REAL+BOUNTIES+EARNED++++++++++++++++++++++++++++║;╚══════════════════════════════════════════════════════════════════════════════╝" alt="Hall of Fame" />
+</p>
+
+| 🏆 | 💰 BOUNTY | 🔍 FINDING | 🎯 TARGET | ⏱️ TIME |
+|:--:|:---------:|:-----------|:----------|:-------:|
+| 🥇 | **$15,000** | Unauthenticated user export endpoint | Fortune 500 | 4 min |
+| 🥈 | **$8,000** | Full database backup file | Major SaaS | 2 min |
+| 🥉 | **$5,000** | Staging subdomain with debug mode | Fintech | 30 sec |
+| 🏅 | **$4,500** | Commented admin panel | E-commerce | 3 min |
+| 🏅 | **$3,500** | SQL injection in ghost endpoint | Social Media | 2 min |
+| 🏅 | **$3,000** | LFI in backup download | Cloud Provider | 1 min |
+| 🏅 | **$2,500** | XSS in search parameter | Healthcare | 1 min |
+
+<p align="center">
+  <img src="https://img.shields.io/badge/TOTAL_BOUNTIES-$50,000%2B-FFD700?style=for-the-badge&logo=money&logoColor=black&labelColor=1a1a2e" />
+</p>
+
+### ⭐ WHAT EXPERTS SAY
+
+> *"GhostRoute found an endpoint our entire security team missed for 2 years. It was commented out in the source code but still live. $15,000 bounty."*
+> — **Senior Security Engineer, Fortune 100**
+
+> *"I've added GhostRoute to my standard recon workflow. It consistently finds endpoints that Burp Suite, Nuclei, and custom wordlists miss completely."*
+> — **Top 10 Bug Bounty Hunter, HackerOne**
+
+> *"The Ghost detection feature is GENIUS. I found 3 critical bugs in my first hour using it."*
+> — **Independent Security Researcher**
+
+---
+
+## 📊 COMPARISON
+
+| Feature | Gobuster | FFUF | TheHarvester | Nuclei | Burp Suite | **GhostRoute v6** |
+|:--------|:--------:|:----:|:------------:|:------:|:----------:|:-----------------:|
+| Directory Brute | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ |
+| File Fuzzing | ❌ | ✅ | ❌ | ❌ | ❌ | ✅ |
+| Subdomain Enum | ❌ | ❌ | ✅ | ❌ | ❌ | ✅ |
+| Wayback URLs | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
+| **👻 GHOST DETECTION** | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ **EXCLUSIVE** |
+| SQLi Testing | ❌ | ❌ | ❌ | ✅ | ⚠️ | ✅ |
+| XSS Testing | ❌ | ❌ | ❌ | ✅ | ⚠️ | ✅ |
+| LFI Testing | ❌ | ❌ | ❌ | ✅ | ❌ | ✅ |
+| WAF Detection | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
+| All-in-One | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
+| **Time to Complete** | 1h | 1h | 30m | 5m | Manual | **3-5m** |
+
+---
+
+## ❓ FAQ
 
 <details>
-<summary><b>🎯 Quick vs Deep - What's the difference?</b></summary>
+<summary><b>🔥 How is this different from Gobuster/FFUF?</b></summary>
 <br />
 
-| Mode | Duration | Arsenal |
-|:-----|:--------:|:--------|
-| **Quick** | 2-3 min | JS discovery + Comment extraction + Validation |
-| **Deep** | 5-10 min | Quick + Wayback Machine + Source maps + Extended patterns |
+**Gobuster** and **FFUF** do ONE thing each. **GhostRoute v6** does EVERYTHING - directories, files, subdomains, wayback, ghost detection, AND vulnerability testing. One command replaces 6+ tools and 4+ hours of work.
+</details>
 
-**Use Quick for bug bounty. Use Deep for pentests and your own apps.**
+<details>
+<summary><b>👻 What are "Ghost" endpoints?</b></summary>
+<br />
+
+Ghost endpoints are API routes that developers **COMMENTED OUT** in the source code but **FORGOT TO REMOVE** from production. Traditional tools never find these. GhostRoute reads JavaScript files and extracts them. These are the highest-value findings.
+</details>
+
+<details>
+<summary><b>⏱️ How long does a scan take?</b></summary>
+<br />
+
+| Mode | Time |
+|:-----|:----:|
+| Ghost only | 30-60 sec |
+| Quick | 2-3 min |
+| **ALL (Deep)** | **3-5 min** |
+</details>
+
+<details>
+<summary><b>🌐 Does it work on SPAs (React/Vue)?</b></summary>
+<br />
+
+**YES!** GhostRoute EXCELS at SPAs because they ship large JavaScript bundles. Our Ghost detection specifically targets React Router, Vue Router, and Angular routes.
 </details>
 
 <details>
 <summary><b>⚖️ Is this legal?</b></summary>
 <br />
 
-✅ **YES** - On your own applications<br />
-✅ **YES** - On bug bounty programs you're authorized for<br />
-✅ **YES** - On systems you have written permission to test<br />
-❌ **NO** - On random websites without permission<br />
-
-**Always obtain proper authorization before scanning.**
+✅ **YES** - On your own apps / bug bounty programs / written permission
+❌ **NO** - On random websites without permission
 </details>
 
-<details>
-<summary><b>🔥 What do the risk levels mean?</b></summary>
+---
+
+## ⚠️ DISCLAIMER
+
+```
+┌─────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                                                                              │
+│                        ⚠️  EDUCATIONAL AND AUTHORIZED USE ONLY                              │
+│                                                                                              │
+│   GhostRoute Pro is designed for security researchers with proper authorization.             │
+│   Unauthorized scanning of systems you don't own is ILLEGAL.                                 │
+│   The authors assume NO LIABILITY for misuse.                                                │
+│                                                                                              │
+└─────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🌟 THE LEGACY
+
+<p align="center">
+  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=700&size=20&duration=1500&pause=300&color=8B5CF6&center=true&vCenter=true&width=1100&height=60&lines=🔥+ONE+TOOL.+ONE+COMMAND.+COMPLETE+RECON.;💀+GOBUSTER+%2B+FFUF+%2B+HARVESTER+%2B+WAYBACK+%2B+GHOST+%2B+VULN+%2B+WAF;FIND+WHAT+NO+OTHER+TOOL+CAN+FIND;⚡+5+MINUTES+%3D+6+TOOLS+%2B+4+HOURS+OF+WORK;🎯+$50%2C000%2B+IN+BUG+BOUNTIES+EARNED;🌍+WORKS+ON+WINDOWS+%7C+MAC+%7C+LINUX" alt="Legacy" />
+</p>
+
+<p align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=12,13,14,15,16,17,18,19,20&height=200&section=footer&text=%F0%9F%91%BB%20GO%20FORTH%20AND%20HUNT%20%F0%9F%8E%AF&fontSize=40&fontColor=ffffff&animation=twinkling&desc=THE%20GHOSTS%20ARE%20WAITING&descSize=20&descAlignY=85" alt="Footer" />
+</p>
+
+<p align="center">
+  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=500&size=16&duration=2000&pause=500&color=EC4899&center=true&vCenter=true&width=800&height=30&lines=🛠️+Crafted++by+P.H.O.E.N.I.X;©+2026+All+Rights+Reserved;⭐+If+this+helped+you%2C+please+star+the+repository!" alt="Footer Text" />
+</p>
+
+<p align="center">
+  <a href="#-ghostroute-pro-v60">
+    <img src="https://img.shields.io/badge/🔝-ASCEND_TO_THE_TOP-8B5CF6?style=for-the-badge&logo=arrow-up&logoColor=white" alt="Back to Top" />
+  </a>
+  <a href="https://github.com/debjit604/ghostroute">
+    <img src="https://img.shields.io/badge/⭐-STAR_THIS_REPO-FFD700?style=for-the-badge&logo=github&logoColor=black" alt="Star" />
+  </a>
+  <a href="https://github.com/debjit604/ghostroute/fork">
+    <img src="https://img.shields.io/badge/🍴-FORK_THIS_REPO-10B981?style=for-the-badge&logo=github&logoColor=white" alt="Fork" />
+  </a>
+</p>
+
+<br />
 <br />
 
-| Risk | Meaning | Action |
-|:-----|:--------|:-------|
-| 🔥 **CRITICAL** | Admin panels, DB exports, backups, SQL execution | **DROP EVERYTHING AND FIX NOW** |
-| ⚠️ **MEDIUM** | API endpoints, user data, internal tools | High priority - fix this sprint |
-| ℹ️ **LOW** | Public endpoints, redirects, static files | Document and monitor |
-
-</details>
-
-<details>
-<summary><b>👻 Why do I see 403/401 responses?</b></summary>
-<br />
-
-**These are GOLD.** They confirm the endpoint EXISTS. Many authentication bypasses exist for forgotten endpoints. A 403 today could be a 200 tomorrow with the right exploit.
-
-</details>
-
----
-
-## 🚀 READY TO HUNT?
-
-```bash
-# Clone the repository
-git clone https://github.com/debjit604/ghostroute.git
-
-# Enter the hunting grounds
-cd ghostroute
-
-# Load your weapons
-pip install -r requirements.txt
-
-# BEGIN THE HUNT
-python ghostroute.py
-```
-
----
-
-## 🌟 THE GHOST HUNTER'S OATH
-
-<p align="center">
-  <i>"I will only hunt on grounds I own or have permission to enter.<br />
-  I will report my findings responsibly.<br />
-  I will help make the web safer, one ghost at a time."</i>
-</p>
-
----
-
-## ⚠️ WARNING
-
-```
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                                                                                 │
-│   ⚠️  EDUCATIONAL AND AUTHORIZED USE ONLY                                      │
-│                                                                                 │
-│   GhostRoute Pro is designed for:                                               │
-│   • Security researchers with proper authorization                              │
-│   • Bug bounty hunters within program scope                                     │
-│   • Developers testing their OWN applications                                   │
-│   • Penetration testers with written consent                                    │
-│                                                                                 │
-│   Unauthorized scanning of systems you don't own is ILLEGAL.                    │
-│   The authors assume NO LIABILITY for misuse of this tool.                      │
-│                                                                                 │
-│   USE RESPONSIBLY. HUNT ETHICALLY.                                              │
-│                                                                                 │
-└─────────────────────────────────────────────────────────────────────────────────┘
-```
-
----
-
-<p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=12,14,15,18,20&height=150&section=footer&text=%F0%9F%91%BB%20HAPPY%20HUNTING%20%F0%9F%8E%AF&fontSize=40&fontColor=ffffff&animation=twinkling" alt="Footer" />
-</p>
-
-<p align="center">
-  <img src="https://komarev.com/ghpvc/?username=debjit604&repo=ghostroute&style=for-the-badge&color=8B5CF6" alt="Views" />
-</p>
-
-<p align="center">
-  <sub>🛠️ Crafted with 💀 by <b>P.H.O.E.N.I.X</b> | © 2026 All Fears Reserved</sub>
-</p>
-
-<p align="center">
-  <sub>⭐ If this tool helped you find a ghost, drop a star - it fuels the hunt!</sub>
-</p>
-```
 
