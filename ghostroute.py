@@ -1,16 +1,8 @@
 #!/usr/bin/env python3
 """
-GhostRoute Pro v2.0.0 - Endpoint Resurrection Scanner
-Find hidden API endpoints that developers thought they deleted.
-
-Author: P.H.O.E.N.I.X
-License: MIT
-Version: 2.0.0
-
-Usage:
-    python ghostroute.py
-    python ghostroute.py --target https://example.com --quick
-    python ghostroute.py --target https://example.com --deep --output report.html
+GHOSTROUTE PRO v6.0 - PROFESSIONAL EDITION
+The Most Advanced Endpoint Discovery Tool Ever Built
+Crafted by P.H.O.E.N.I.X
 """
 
 import os
@@ -18,647 +10,510 @@ import re
 import sys
 import json
 import time
+import hashlib
 import argparse
 import threading
-from urllib.parse import urlparse, urljoin
+from urllib.parse import urlparse, urljoin, parse_qs, quote
 from datetime import datetime
+from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from dataclasses import dataclass, field
-from typing import List, Set, Dict, Optional, Tuple
 
-try:
-    import requests
-    from colorama import init, Fore, Back, Style
-    init(autoreset=True)
-except ImportError:
-    print("[!] Missing dependencies. Run: pip install requests colorama")
-    sys.exit(1)
+def install_deps():
+    for pkg in ['requests', 'colorama']:
+        try: __import__(pkg)
+        except: os.system(f"{sys.executable} -m pip install {pkg} -q")
 
-# Suppress SSL warnings
+install_deps()
+
+import requests
+from colorama import init, Fore, Style
+init(autoreset=True)
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # ============================================================================
-# CONFIGURATION & DATA CLASSES
+# COLORS
 # ============================================================================
+class C:
+    R = Fore.RED
+    G = Fore.GREEN
+    Y = Fore.YELLOW
+    B = Fore.BLUE
+    M = Fore.MAGENTA
+    C = Fore.CYAN
+    W = Fore.WHITE
+    X = Style.RESET_ALL
+    BD = Style.BRIGHT
 
-@dataclass
-class GhostFinding:
-    """Represents a discovered ghost endpoint."""
-    url: str
-    status_code: int
-    source: str
-    evidence: str
-    risk: str
-    timestamp: str = field(default_factory=lambda: datetime.now().isoformat())
+# ============================================================================
+# BANNERS
+# ============================================================================
+BANNER = f"""
+{C.M}{C.BD}╔══════════════════════════════════════════════════════════════════════════════════════╗
+║  {C.C}██████╗ ██╗  ██╗ ██████╗ ███████╗████████╗██████╗  ██████╗ ██╗   ██╗████████╗███████╗{C.M}  ║
+║  {C.C}██╔════╝ ██║  ██║██╔═══██╗██╔════╝╚══██╔══╝██╔══██╗██╔═══██╗██║   ██║╚══██╔══╝██╔════╝{C.M}  ║
+║  {C.C}██║  ███╗███████║██║   ██║███████╗   ██║   ██████╔╝██║   ██║██║   ██║   ██║   █████╗  {C.M}  ║
+║  {C.C}██║   ██║██╔══██║██║   ██║╚════██║   ██║   ██╔══██╗██║   ██║██║   ██║   ██║   ██╔══╝  {C.M}  ║
+║  {C.C}╚██████╔╝██║  ██║╚██████╔╝███████║   ██║   ██║  ██║╚██████╔╝╚██████╔╝   ██║   ███████╗{C.M}  ║
+║  {C.C} ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝  ╚═════╝    ╚═╝   ╚══════╝{C.M}  ║
+╠══════════════════════════════════════════════════════════════════════════════════════════╣
+║  {C.Y} PROFESSIONAL v6.0.0         │  {C.G}GOBUSTER+FFUF+HARVESTER+WAYBACK+GHOST+VULN+WAF{C.M}     ║
+║  {C.B}  CRAFTED BY: P.H.O.E.N.I.X  │  {C.W}github.com/debjit604/ghostroute{C.M}                    ║
+╚══════════════════════════════════════════════════════════════════════════════════════════╝{C.X}
+"""
 
-class Colors:
-    """Terminal colors for output."""
-    RED = Fore.RED
-    GREEN = Fore.GREEN
-    YELLOW = Fore.YELLOW
-    BLUE = Fore.BLUE
-    MAGENTA = Fore.MAGENTA
-    CYAN = Fore.CYAN
-    WHITE = Fore.WHITE
-    RESET = Style.RESET_ALL
-    BOLD = Style.BRIGHT
+COMMANDS = f"""
+{C.C}{C.BD}╔══════════════════════════════════════════════════════════════════════════════════════╗
+║                              {C.W}📖 COMMAND REFERENCE{C.C}                                         ║
+╠══════════════════════════════════════════════════════════════════════════════════════════╣
+║  {C.G}QUICK START:{C.X}                                                                              ║
+║    {C.C}python ghostroute.py{C.X}                              → Interactive mode                    ║
+║    {C.C}python ghostroute.py -t https://target.com{C.X}         → Full scan                          ║
+║    {C.C}python ghostroute.py -t https://target.com --deep{C.X}  → Deep scan + vulns                  ║
+║                                                                                                      ║
+║  {C.G}SCAN MODES (-m):{C.X}                                                                          ║
+║    {C.C}all{C.X} (default)  → Everything         {C.C}subdomain{C.X}  → Subdomains only              ║
+║    {C.C}gobuster{C.X}       → Directories        {C.C}wayback{C.X}    → Wayback only                 ║
+║    {C.C}ffuf{C.X}           → Files/backups      {C.C}ghost{C.X}      → Ghost detection              ║
+║                                                                                                      ║
+║  {C.G}OPTIONS:{C.X}                                                                                  ║
+║    {C.C}--deep{C.X}              → Test for SQLi, XSS, LFI                                           ║
+║    {C.C}--threads 50{C.X}        → Threads (default:30)                                              ║
+║    {C.C}--timeout 10{C.X}        → Timeout (default:8)                                               ║
+║    {C.C}--cookie \"session=abc\"{C.X} → Authentication cookies                                       ║
+║    {C.C}--proxy http://127.0.0.1:8080{C.X} → Route through Burp                                      ║
+║    {C.C}-v, --verbose{C.X}       → Verbose output                                                    ║
+║    {C.C}-s, --silent{C.X}        → Minimal output                                                    ║
+║                                                                                                      ║
+║  {C.G}EXPORT:{C.X}                                                                                   ║
+║    {C.C}--json report.json{C.X}  → JSON export                                                       ║
+║    {C.C}--txt report.txt{C.X}    → TXT report                                                        ║
+║                                                                                                      ║
+║  {C.G}EXAMPLES:{C.X}                                                                                 ║
+║    {C.W}python ghostroute.py -t admin.target.com --cookie \"sess=xxx\" --deep{C.X}                   ║
+║    {C.W}python ghostroute.py -t target.com -m ghost --json ghosts.json{C.X}                          ║
+╚══════════════════════════════════════════════════════════════════════════════════════════╝{C.X}
+"""
 
-# Patterns for finding commented routes
-COMMENTED_PATTERNS = {
-    'express_get': r'(?://|/\*).*?app\.get\s*\(\s*["\']([^"\']+)["\']',
-    'express_post': r'(?://|/\*).*?app\.post\s*\(\s*["\']([^"\']+)["\']',
-    'express_router': r'(?://|/\*).*?router\.(?:get|post|put|delete|patch)\s*\(\s*["\']([^"\']+)["\']',
-    'react_route': r'(?://|/\*).*?(?:path|to)\s*:\s*["\']([^"\']+)["\']',
-    'html_href': r'<!--.*?(?:href|src|action)\s*=\s*["\']([^"\']+)["\']',
-    'python_route': r'#.*?@app\.(?:route|get|post)\s*\(\s*["\']([^"\']+)["\']',
-    'php_route': r'//.*?Route::(?:get|post|put|delete)\s*\(\s*["\']([^"\']+)["\']',
-    'generic_path': r'(?://|#|/\*).*?(/[a-zA-Z0-9_\-/]+)(?:\s|$)',
+CREDIT = f"""
+{C.M}╔══════════════════════════════════════════════════════════════════════════════════════════╗
+║  {C.Y}👻 GHOSTROUTE PRO v6.0.0 FINAL  │  {C.C}GOBUSTER+FFUF+HARVESTER+WAYBACK+GHOST+VULN+WAF{C.M}      ║
+║  {C.G}🛠️  CRAFTED WITH 💀 BY P.H.O.E.N.I.X  │  {C.W}⭐ github.com/debjit604/ghostroute{C.M}           ║
+╚══════════════════════════════════════════════════════════════════════════════════════════╝{C.X}
+"""
+
+# ============================================================================
+# WORDLISTS
+# ============================================================================
+DIRS = ["admin", "api", "backup", "backups", "beta", "config", "css", "dashboard", "db", "debug",
+        "dev", "development", "docs", "download", "files", "graphql", "images", "img", "includes",
+        "internal", "js", "json", "lib", "login", "logs", "media", "metrics", "old", "panel",
+        "phpmyadmin", "private", "scripts", "secret", "secure", "sql", "staff", "staging", "static",
+        "stats", "status", "storage", "swagger", "temp", "test", "testing", "tmp", "upload",
+        "uploads", "user", "v1", "v2", "v3", "vendor"]
+
+FILES = ["index", "home", "main", "config", "setup", "install", "readme", "changelog", "license",
+         "wp-config", "web.config", ".htaccess", "robots", "sitemap", "phpinfo", "info", "test", "backup"]
+
+EXTS = ["", ".php", ".asp", ".aspx", ".jsp", ".html", ".json", ".xml", ".txt", ".log", ".bak",
+        ".backup", ".old", ".sql", ".zip", ".tar", ".gz"]
+
+SUBDOMAINS = ["www", "mail", "blog", "api", "dev", "develop", "development", "test", "testing",
+              "staging", "stage", "beta", "demo", "portal", "admin", "adm", "internal", "private",
+              "app", "apps", "mobile", "support", "help", "docs", "status", "monitor", "metrics",
+              "logs", "cdn", "static", "assets", "media"]
+
+GHOST_PATTERNS = [
+    (r'(?://|/\*).*?app\.get\s*\(\s*["\']([^"\']+)["\']', 'GET'),
+    (r'(?://|/\*).*?app\.post\s*\(\s*["\']([^"\']+)["\']', 'POST'),
+    (r'(?://|/\*).*?router\.(?:get|post|put|delete)\s*\(\s*["\']([^"\']+)["\']', 'GET'),
+    (r'(?://|/\*).*?app\.use\s*\(\s*["\']([^"\']+)["\']', 'GET'),
+    (r'(?://|/\*).*?path\s*:\s*["\']([^"\']+)["\']', 'GET'),
+    (r'#.*?@app\.route\s*\(\s*["\']([^"\']+)["\']', 'GET'),
+    (r'//.*?Route::(?:get|post|put|delete)\s*\(\s*["\']([^"\']+)["\']', 'GET'),
+    (r'//.*?@(?:Get|Post|Put|Delete)Mapping\s*\(\s*["\']([^"\']+)["\']', 'GET'),
+    (r'(?://|#|/\*).*?(/api/[a-zA-Z0-9_\-/]+)', 'GET'),
+    (r'(?://|#|/\*).*?(/admin[a-zA-Z0-9_\-/]*)', 'GET'),
+    (r'(?://|#|/\*).*?(/backup[a-zA-Z0-9_\-/]*)', 'GET'),
+    (r'(?://|#|/\*).*?(/debug[a-zA-Z0-9_\-/]*)', 'GET'),
+    (r'(?://|#|/\*).*?(/internal[a-zA-Z0-9_\-/]*)', 'GET'),
+    (r'(?://|#|/\*).*?(/v[0-9]+/[a-zA-Z0-9_\-/]+)', 'GET'),
+    (r'(?://|#|/\*).*?(/graphql[a-zA-Z0-9_\-/]*)', 'POST'),
+]
+
+WAF_SIGS = {
+    'Cloudflare': ['cf-ray', '__cfduid', 'cloudflare'],
+    'AWS WAF': ['x-amzn-requestid', 'x-amz-cf-id'],
+    'Akamai': ['x-akamai-transformed', 'akamai'],
+    'Imperva': ['x-iinfo', 'incapsula', 'imperva'],
+    'Sucuri': ['x-sucuri-id', 'sucuri'],
+    'ModSecurity': ['mod_security', 'modsecurity'],
 }
 
-# Browser headers to avoid blocking
-HEADERS = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-    'Accept': '*/*',
-    'Accept-Language': 'en-US,en;q=0.9',
-    'Accept-Encoding': 'gzip, deflate',
-}
+SQLI = [("' OR '1'='1", "Boolean"), ("' AND SLEEP(3)--", "Time")]
+XSS = ["<script>alert('XSS')</script>", "<img src=x onerror=alert('XSS')>"]
+LFI = ["../../../etc/passwd", "php://filter/convert.base64-encode/resource=index"]
+
+HEADERS = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
 
 # ============================================================================
-# BANNER FUNCTIONS
+# SCANNER CLASS
 # ============================================================================
-
-def print_banner():
-    """Display the GhostRoute Pro banner."""
-    banner = f"""
-{Colors.CYAN}{Colors.BOLD}╔══════════════════════════════════════════════════════════════════════════════╗
-║                                                                                  ║
-║  {Colors.MAGENTA} ██████╗ ██╗  ██╗ ██████╗ ███████╗████████╗██████╗  ██████╗ ██╗   ██╗████████╗███████╗{Colors.CYAN}  ║
-║  {Colors.MAGENTA}██╔════╝ ██║  ██║██╔═══██╗██╔════╝╚══██╔══╝██╔══██╗██╔═══██╗██║   ██║╚══██╔══╝██╔════╝{Colors.CYAN}  ║
-║  {Colors.MAGENTA}██║  ███╗███████║██║   ██║███████╗   ██║   ██████╔╝██║   ██║██║   ██║   ██║   █████╗  {Colors.CYAN}  ║
-║  {Colors.MAGENTA}██║   ██║██╔══██║██║   ██║╚════██║   ██║   ██╔══██╗██║   ██║██║   ██║   ██║   ██╔══╝  {Colors.CYAN}  ║
-║  {Colors.MAGENTA}╚██████╔╝██║  ██║╚██████╔╝███████║   ██║   ██║  ██║╚██████╔╝╚██████╔╝   ██║   ███████╗{Colors.CYAN}  ║
-║  {Colors.MAGENTA} ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝  ╚═════╝    ╚═╝   ╚══════╝{Colors.CYAN}  ║
-║                                                                                  ║
-║{Colors.YELLOW}                             Pro Edition v2.0.0 {Colors.CYAN}                                            ║
-║{Colors.GREEN}                  \"Find what they thought was deleted\"{Colors.CYAN}                                     ║
-║                                                                                  ║
-║{Colors.BLUE}                         🛠️  Crafted by: P.H.O.E.N.I.X {Colors.CYAN}                                     ║
-║                                                                                  ║
-╚══════════════════════════════════════════════════════════════════════════════════╝{Colors.RESET}
-"""
-    print(banner)
-
-def print_scan_header(target: str, mode: str, threads: int):
-    """Display scan header."""
-    print(f"\n{Colors.CYAN}{Colors.BOLD}{'═'*80}{Colors.RESET}")
-    print(f"{Colors.GREEN}{Colors.BOLD}🎯 TARGET:{Colors.RESET} {Colors.WHITE}{target}{Colors.RESET}")
-    print(f"{Colors.GREEN}{Colors.BOLD}⚙️  MODE:{Colors.RESET} {Colors.YELLOW}{mode}{Colors.RESET}")
-    print(f"{Colors.GREEN}{Colors.BOLD}🧵 THREADS:{Colors.RESET} {Colors.YELLOW}{threads}{Colors.RESET}")
-    print(f"{Colors.GREEN}{Colors.BOLD}🕐 STARTED:{Colors.RESET} {Colors.WHITE}{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}{Colors.RESET}")
-    print(f"{Colors.CYAN}{Colors.BOLD}{'═'*80}{Colors.RESET}\n")
-
-def print_scan_footer(findings_count: int, high: int, medium: int, low: int, elapsed: float):
-    """Display scan footer with results."""
-    print(f"\n{Colors.CYAN}{Colors.BOLD}{'═'*80}{Colors.RESET}")
-    print(f"{Colors.GREEN}{Colors.BOLD}✅ SCAN COMPLETE{Colors.RESET}")
-    print(f"{Colors.CYAN}{'─'*80}{Colors.RESET}")
-    print(f"{Colors.GREEN}⏱️  Time Elapsed:{Colors.RESET} {Colors.WHITE}{elapsed:.2f} seconds{Colors.RESET}")
-    print(f"{Colors.GREEN}📊 Total Ghosts Found:{Colors.RESET} {Colors.BOLD}{findings_count}{Colors.RESET}")
-    print(f"{Colors.CYAN}{'─'*80}{Colors.RESET}")
-    print(f"{Colors.RED}🔥 HIGH:{Colors.RESET} {Colors.BOLD}{high}{Colors.RESET}    {Colors.YELLOW}⚠️  MEDIUM:{Colors.RESET} {Colors.BOLD}{medium}{Colors.RESET}    {Colors.BLUE}ℹ️  LOW:{Colors.RESET} {Colors.BOLD}{low}{Colors.RESET}")
-    print(f"{Colors.CYAN}{Colors.BOLD}{'═'*80}{Colors.RESET}\n")
-
-def print_credit():
-    """Display credit footer."""
-    credit = f"""
-{Colors.MAGENTA}{Colors.BOLD}╔══════════════════════════════════════════════════════════════════════════════╗
-║                                                                                  ║
-║                         {Colors.YELLOW} GHOSTROUTE PRO v2.0.0{Colors.MAGENTA}                                    ║
-║                    {Colors.CYAN}🔮 \"Find what they thought was deleted\"{Colors.MAGENTA}                              ║
-║                                                                                  ║
-║                         {Colors.GREEN}🛠️  Crafted by{Colors.MAGENTA}                                         ║
-║                                                                                  ║
-║   {Colors.RED}██████╗ {Colors.YELLOW}██╗  ██╗ {Colors.GREEN}██████╗ {Colors.CYAN}███████╗ {Colors.BLUE}███╗   ██╗ {Colors.MAGENTA}██╗██╗  ██╗{Colors.MAGENTA}                             ║
-║   {Colors.RED}██╔══██╗{Colors.YELLOW}██║  ██║{Colors.GREEN}██╔═══██╗{Colors.CYAN}██╔════╝{Colors.BLUE}████╗  ██║{Colors.MAGENTA}██║╚██╗██╔╝{Colors.MAGENTA}                             ║
-║   {Colors.RED}██████╔╝{Colors.YELLOW}███████║{Colors.GREEN}██║   ██║{Colors.CYAN}█████╗  {Colors.BLUE}██╔██╗ ██║{Colors.MAGENTA}██║ ╚███╔╝ {Colors.MAGENTA}                             ║
-║   {Colors.RED}██╔═══╝ {Colors.YELLOW}██╔══██║{Colors.GREEN}██║   ██║{Colors.CYAN}██╔══╝  {Colors.BLUE}██║╚██╗██║{Colors.MAGENTA}██║ ██╔██╗ {Colors.MAGENTA}                             ║
-║   {Colors.RED}██║     {Colors.YELLOW}██║  ██║{Colors.GREEN}╚██████╔╝{Colors.CYAN}███████╗{Colors.BLUE}██║ ╚████║{Colors.MAGENTA}██║██╔╝ ██╗{Colors.MAGENTA}                             ║
-║   {Colors.RED}╚═╝     {Colors.YELLOW}╚═╝  ╚═╝{Colors.GREEN} ╚═════╝ {Colors.CYAN}╚══════╝{Colors.BLUE}╚═╝  ╚═══╝{Colors.MAGENTA}╚═╝╚═╝  ╚═╝{Colors.MAGENTA}                             ║
-║                                                                                  ║
-║                         {Colors.WHITE}🐦  @phoenix_security  |                   ║
-║                                                                                  ║
-╚══════════════════════════════════════════════════════════════════════════════════╝{Colors.RESET}
-"""
-    print(credit)
-
-# ============================================================================
-# CORE SCANNER CLASS
-# ============================================================================
-
-class GhostRouteScanner:
-    """Main scanner class for finding ghost endpoints."""
+class GhostRoute:
     
-    def __init__(self, target: str, threads: int = 10, timeout: int = 5, 
-                 deep: bool = False, verbose: bool = False):
-        self.target = target.rstrip('/')
-        self.base_domain = urlparse(target).netloc
-        self.threads = threads
-        self.timeout = timeout
-        self.deep = deep
-        self.verbose = verbose
-        self.session = requests.Session()
-        self.session.headers.update(HEADERS)
-        self.session.verify = False
+    def __init__(self, target, mode="all", threads=30, timeout=8, verbose=False, silent=False,
+                 deep=False, cookies=None, headers=None, proxy=None):
         
-        self.js_files: Set[str] = set()
-        self.potential_endpoints: Set[Tuple[str, str]] = set()
-        self.findings: List[GhostFinding] = []
+        self.target = target.rstrip('/')
+        self.base = urlparse(target).netloc
+        self.mode = mode
+        self.threads = min(threads, 100)
+        self.timeout = timeout
+        self.verbose = verbose
+        self.silent = silent
+        self.deep = deep
+        
+        self.sess = requests.Session()
+        self.sess.headers.update(HEADERS)
+        if headers: self.sess.headers.update(headers)
+        if cookies: self.sess.cookies.update(cookies)
+        if proxy: self.sess.proxies = {'http': proxy, 'https': proxy}
+        self.sess.verify = False
+        
+        self.js_files = set()
+        self.endpoints = set()
+        self.results = []
+        self.vulns = []
+        self.subdomains = []
+        self.waf_info = None
         
         self.lock = threading.Lock()
-        
-    def log(self, message: str, level: str = "INFO"):
-        """Pretty logging with colors."""
-        if level == "SUCCESS":
-            print(f"{Colors.GREEN}[+] {message}{Colors.RESET}")
-        elif level == "WARNING":
-            print(f"{Colors.YELLOW}[!] {message}{Colors.RESET}")
-        elif level == "ERROR":
-            print(f"{Colors.RED}[-] {message}{Colors.RESET}")
-        elif level == "GHOST":
-            print(f"{Colors.MAGENTA}[👻] {message}{Colors.RESET}")
-        elif level == "INFO" and self.verbose:
-            print(f"{Colors.BLUE}[*] {message}{Colors.RESET}")
+        self.total = 0
+        self.done = 0
+        self.scan_id = hashlib.md5(f"{target}{time.time()}".encode()).hexdigest()[:8]
     
-    def fetch_url(self, url: str) -> Optional[str]:
-        """Fetch URL content safely."""
-        try:
-            response = self.session.get(url, timeout=self.timeout)
-            if response.status_code == 200:
-                return response.text
-        except Exception as e:
-            if self.verbose:
-                self.log(f"Failed to fetch {url}: {e}", "ERROR")
-        return None
+    def log(self, msg, level="INFO"):
+        if self.silent: return
+        if level == "OK": print(f"{C.G}[+]{C.X} {msg}")
+        elif level == "VULN": print(f"{C.R}[🔥]{C.X} {msg}")
+        elif level == "GHOST": print(f"{C.M}[👻]{C.X} {msg}")
+        elif level == "FOUND": print(f"{C.Y}[🔍]{C.X} {msg}")
+        elif level == "WAF": print(f"{C.M}[🛡️]{C.X} {msg}")
+        elif level == "INFO" and self.verbose: print(f"{C.B}[*]{C.X} {msg}")
     
-    # ========================================================================
-    # PHASE 1: JAVASCRIPT DISCOVERY
-    # ========================================================================
+    def fetch(self, url, method="GET"):
+        try: return self.sess.request(method, url, timeout=self.timeout, allow_redirects=True)
+        except: return None
     
-    def discover_js_files(self):
-        """Find all JavaScript files on target."""
-        self.log(f"Discovering JavaScript files on {self.target}...", "INFO")
+    def assess_risk(self, url, status):
+        ul = url.lower()
+        critical = ['admin', 'backup', 'export', 'debug', 'internal', 'sql', 'exec']
+        high = ['api/admin', 'graphql', 'dashboard']
         
-        html = self.fetch_url(self.target)
-        if not html:
-            self.log("Failed to fetch main page", "ERROR")
-            return
-        
-        # Extract script tags
-        patterns = [
-            r'<script[^>]+src=["\']([^"\']+\.js[^"\']*)["\']',
-            r'<script[^>]+src=["\']([^"\']+\.jsx[^"\']*)["\']',
-            r'<script[^>]+src=["\']([^"\']+\.ts[^"\']*)["\']',
-            r'<link[^>]+href=["\']([^"\']+\.js[^"\']*)["\']',
-        ]
-        
-        for pattern in patterns:
-            matches = re.findall(pattern, html, re.IGNORECASE)
-            for match in matches:
-                full_url = urljoin(self.target, match)
-                if self.base_domain in full_url:
-                    self.js_files.add(full_url)
-        
-        # Check for source maps
-        for js_file in list(self.js_files):
-            map_url = js_file + '.map'
-            try:
-                response = self.session.head(map_url, timeout=self.timeout)
-                if response.status_code == 200:
-                    self.js_files.add(map_url)
-                    self.log(f"Found source map: {map_url}", "SUCCESS")
-            except:
-                pass
-        
-        self.log(f"Discovered {len(self.js_files)} JavaScript files", "SUCCESS")
-    
-    # ========================================================================
-    # PHASE 2: COMMENT EXTRACTION
-    # ========================================================================
-    
-    def extract_from_js(self, js_url: str):
-        """Extract commented endpoints from a JS file."""
-        content = self.fetch_url(js_url)
-        if not content:
-            return
-        
-        found_count = 0
-        for pattern_name, pattern in COMMENTED_PATTERNS.items():
-            matches = re.findall(pattern, content, re.IGNORECASE | re.MULTILINE)
-            for match in matches:
-                endpoint = match if isinstance(match, str) else match[0]
-                if endpoint and len(endpoint) > 1:
-                    if endpoint.startswith('/') or endpoint.startswith('http'):
-                        with self.lock:
-                            self.potential_endpoints.add((endpoint, f"Commented in {js_url}"))
-                        found_count += 1
-        
-        if found_count > 0 and self.verbose:
-            self.log(f"Found {found_count} ghosts in {js_url}", "GHOST")
-    
-    def scan_all_js_files(self):
-        """Scan all discovered JS files."""
-        self.log("Scanning JavaScript files for commented routes...", "INFO")
-        
-        with ThreadPoolExecutor(max_workers=self.threads) as executor:
-            futures = {executor.submit(self.extract_from_js, url): url 
-                      for url in self.js_files}
-            
-            for i, future in enumerate(as_completed(futures), 1):
-                if i % 10 == 0:
-                    self.log(f"Progress: {i}/{len(self.js_files)} files", "INFO")
-        
-        self.log(f"Extracted {len(self.potential_endpoints)} potential endpoints", "SUCCESS")
-    
-    # ========================================================================
-    # PHASE 3: WAYBACK MACHINE (Deep Scan Only)
-    # ========================================================================
-    
-    def query_wayback(self):
-        """Fetch historical URLs from Wayback Machine."""
-        if not self.deep:
-            return
-        
-        self.log("Querying Wayback Machine for historical endpoints...", "INFO")
-        
-        cdx_url = "http://web.archive.org/cdx/search/cdx"
-        params = {
-            'url': f"{self.target}/*",
-            'output': 'json',
-            'fl': 'original',
-            'filter': 'statuscode:200',
-            'collapse': 'urlkey',
-            'limit': 1000
-        }
-        
-        try:
-            response = self.session.get(cdx_url, params=params, timeout=30)
-            data = response.json()
-            
-            for entry in data[1:]:
-                url = entry[0]
-                parsed = urlparse(url)
-                path = parsed.path
-                
-                interesting = ['/api/', '/admin/', '/internal/', '/v1/', '/v2/', 
-                              '/backup/', '/debug/', '/export/', '/download/']
-                if any(p in path for p in interesting):
-                    with self.lock:
-                        self.potential_endpoints.add((path, "Wayback Machine (historical)"))
-            
-            self.log(f"Found historical endpoints from Wayback", "SUCCESS")
-        except Exception as e:
-            self.log(f"Wayback query failed: {e}", "WARNING")
-    
-    # ========================================================================
-    # PHASE 4: VALIDATION
-    # ========================================================================
-    
-    def assess_risk(self, endpoint: str, status_code: int) -> str:
-        """Determine risk level of endpoint."""
-        endpoint_lower = endpoint.lower()
-        
-        high_risk = ['/admin/', '/backup/', '/export/', '/download/', 
-                    '/debug/', '/internal/', '/migrate', '/dump']
-        medium_risk = ['/api/', '/v1/', '/v2/', '/graphql', '/user/', '/account/']
-        
-        if any(p in endpoint_lower for p in high_risk):
-            return "HIGH"
-        elif any(p in endpoint_lower for p in medium_risk):
-            return "MEDIUM"
-        elif status_code in [200, 500]:
-            return "MEDIUM"
-        else:
+        if status == 200:
+            if any(p in ul for p in critical): return "CRITICAL"
+            if any(p in ul for p in high): return "HIGH"
+            if '/api/' in ul or '/v1/' in ul: return "MEDIUM"
             return "LOW"
+        elif status in [401, 403]: return "MEDIUM"
+        elif status >= 500: return "MEDIUM"
+        return "LOW"
     
-    def validate_endpoint(self, endpoint: str, source: str) -> Optional[GhostFinding]:
-        """Test if endpoint actually exists."""
-        test_url = urljoin(self.target, endpoint)
+    def test_url(self, url, method, source, ttype):
+        r = self.fetch(url, method)
+        if not r: return None
         
+        status = r.status_code
+        risk = self.assess_risk(url, status)
+        
+        result = {'url': url, 'method': method, 'status': status, 'size': len(r.content),
+                  'source': source, 'type': ttype, 'risk': risk}
+        
+        if self.deep and status == 200:
+            parsed = urlparse(url)
+            params = parse_qs(parsed.query)
+            if params:
+                param = list(params.keys())[0]
+                for payload, ptype in SQLI:
+                    test_url = url.replace(f"{param}=", f"{param}={quote(payload)}")
+                    try:
+                        start = time.time()
+                        resp = self.sess.get(test_url, timeout=self.timeout)
+                        if time.time() - start > 2.5:
+                            self.vulns.append({'type': 'SQLi', 'url': test_url, 'payload': payload})
+                            self.log(f"SQLi: {test_url}", "VULN")
+                            break
+                    except: pass
+        
+        return result
+    
+    def _run(self, tests):
+        self.total += len(tests)
+        with ThreadPoolExecutor(max_workers=self.threads) as ex:
+            fs = [ex.submit(self.test_url, *t) for t in tests]
+            for f in as_completed(fs):
+                with self.lock: self.done += 1
+                if self.done % 30 == 0 and not self.silent:
+                    pct = int(self.done / self.total * 100) if self.total else 0
+                    print(f"\r{C.B}[*] Progress: {self.done}/{self.total} ({pct}%){C.X}", end="", flush=True)
+                r = f.result()
+                if r:
+                    self.results.append(r)
+                    if r['status'] == 200:
+                        self.log(f"200 OK: {r['url']} [{r['risk']}]", "OK")
+                    elif r['status'] in [403, 401]:
+                        self.log(f"{r['status']} Protected: {r['url']}", "FOUND")
+                    elif r['status'] >= 500:
+                        self.log(f"{r['status']} Error: {r['url']}", "FOUND")
+        if not self.silent: print()
+    
+    def gobuster(self):
+        self.log("Directory brute force...", "INFO")
+        tests = [(f"{self.target}/{d}", "GET", "Gobuster", "directory") for d in DIRS[:25]]
+        self._run(tests)
+    
+    def ffuf(self):
+        self.log("File fuzzing...", "INFO")
+        tests = []
+        for f in FILES[:10]:
+            for e in ["", ".php", ".html", ".bak"]:
+                tests.append((f"{self.target}/{f}{e}", "GET", "FFUF", "file"))
+        for bp in ['backup', 'back']:
+            for e in ['.zip', '.sql', '.tar']:
+                tests.append((f"{self.target}/{bp}{e}", "GET", "FFUF", "backup"))
+        self._run(tests)
+    
+    def subdomain(self):
+        self.log("Subdomain enumeration...", "INFO")
+        parts = self.base.split('.')
+        base = '.'.join(parts[-2:]) if len(parts) > 2 else self.base
+        for sub in SUBDOMAINS[:20]:
+            sd = f"{sub}.{base}"
+            r = self.fetch(f"https://{sd}")
+            if r:
+                self.subdomains.append({'domain': sd, 'status': r.status_code})
+                self.log(f"Subdomain: {sd} ({r.status_code})", "FOUND")
+    
+    def wayback(self):
+        self.log("Wayback Machine...", "INFO")
         try:
-            response = self.session.head(test_url, timeout=self.timeout, 
-                                        allow_redirects=True)
-            
-            interesting_codes = [200, 201, 202, 204, 401, 403, 405, 500]
-            
-            if response.status_code in interesting_codes:
-                risk = self.assess_risk(endpoint, response.status_code)
-                return GhostFinding(
-                    url=test_url,
-                    status_code=response.status_code,
-                    source=source,
-                    evidence=f"Responds with {response.status_code}",
-                    risk=risk
-                )
-                
-            elif response.status_code == 405:
-                get_response = self.session.get(test_url, timeout=self.timeout)
-                if get_response.status_code in interesting_codes:
-                    risk = self.assess_risk(endpoint, get_response.status_code)
-                    return GhostFinding(
-                        url=test_url,
-                        status_code=get_response.status_code,
-                        source=source,
-                        evidence=f"GET responds with {get_response.status_code}",
-                        risk=risk
-                    )
-        except:
-            pass
-        
-        return None
+            r = self.sess.get("http://web.archive.org/cdx/search/cdx",
+                              params={'url': f"{self.target}/*", 'output': 'json', 'limit': 300}, timeout=15)
+            for e in r.json()[1:]:
+                p = urlparse(e[0]).path
+                if p and p != '/':
+                    self.endpoints.add((urljoin(self.target, p), "GET", "Wayback", "historical"))
+            self.log(f"Found {len(r.json())-1} historical URLs", "OK")
+        except: pass
     
-    def validate_all(self):
-        """Validate all discovered endpoints."""
-        self.log(f"Validating {len(self.potential_endpoints)} potential endpoints...", "INFO")
-        
-        with ThreadPoolExecutor(max_workers=self.threads) as executor:
-            futures = {}
-            for endpoint, source in self.potential_endpoints:
-                futures[executor.submit(self.validate_endpoint, endpoint, source)] = endpoint
-            
-            completed = 0
-            for future in as_completed(futures):
-                completed += 1
-                if completed % 20 == 0:
-                    self.log(f"Validation: {completed}/{len(futures)}", "INFO")
-                
-                finding = future.result()
-                if finding:
-                    self.findings.append(finding)
-                    if finding.risk == "HIGH":
-                        self.log(f"🔥 CRITICAL: {finding.url}", "GHOST")
-                    elif finding.risk == "MEDIUM":
-                        self.log(f"⚠️  Found: {finding.url}", "GHOST")
+    def discover_js(self):
+        r = self.fetch(self.target)
+        if r:
+            for m in re.findall(r'<script[^>]+src=["\']([^"\']+\.js[^"\']*)["\']', r.text, re.I):
+                f = urljoin(self.target, m)
+                if self.base in f: self.js_files.add(f)
+        self.log(f"Found {len(self.js_files)} JS files", "OK")
     
-    # ========================================================================
-    # MAIN SCAN
-    # ========================================================================
+    def extract_ghost(self, js):
+        r = self.fetch(js)
+        if not r: return
+        for ptn, mtd in GHOST_PATTERNS:
+            for m in re.findall(ptn, r.text, re.I | re.M):
+                ep = m if isinstance(m, str) else m[0]
+                if ep and len(ep) > 1:
+                    if not ep.startswith('/'): ep = '/' + ep
+                    if ep.startswith('/'):
+                        with self.lock: self.endpoints.add((urljoin(self.target, ep), mtd, "Ghost", "commented"))
     
-    def scan(self) -> List[GhostFinding]:
-        """Run complete scan."""
-        # Phase 1
-        self.discover_js_files()
-        
-        # Phase 2
+    def ghost(self):
+        self.log("Ghost detection...", "INFO")
+        self.discover_js()
         if self.js_files:
-            self.scan_all_js_files()
-        
-        # Phase 3
-        if self.deep:
-            self.query_wayback()
-        
-        # Phase 4
-        if self.potential_endpoints:
-            self.validate_all()
-        
-        return self.findings
+            with ThreadPoolExecutor(max_workers=self.threads) as ex:
+                list(ex.map(self.extract_ghost, self.js_files))
+            self.log(f"Extracted {len(self.endpoints)} ghost endpoints", "OK")
     
-    # ========================================================================
-    # REPORTING
-    # ========================================================================
-    
-    def generate_report(self, output_file: str):
-        """Generate detailed report."""
-        with open(output_file, 'w', encoding='utf-8') as f:
-            f.write("="*80 + "\n")
-            f.write("👻 GHOSTROUTE PRO SCAN REPORT\n")
-            f.write("="*80 + "\n\n")
-            f.write(f"Target: {self.target}\n")
-            f.write(f"Scan Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
-            f.write(f"Mode: {'Deep' if self.deep else 'Quick'}\n")
-            f.write(f"Total Ghosts: {len(self.findings)}\n")
-            f.write(f"Crafted by: P.H.O.E.N.I.X\n\n")
-            
-            for risk_level in ["HIGH", "MEDIUM", "LOW"]:
-                findings = [f for f in self.findings if f.risk == risk_level]
-                if findings:
-                    f.write(f"\n{'='*80}\n")
-                    f.write(f"{risk_level} RISK FINDINGS ({len(findings)})\n")
-                    f.write(f"{'='*80}\n\n")
-                    
-                    for finding in findings:
-                        f.write(f"URL: {finding.url}\n")
-                        f.write(f"Status: {finding.status_code}\n")
-                        f.write(f"Source: {finding.source}\n")
-                        f.write(f"Evidence: {finding.evidence}\n")
-                        f.write("-"*40 + "\n")
+    def scan(self):
+        if not self.silent:
+            print(BANNER)
+            print(COMMANDS)
+            print(f"\n{C.C}══════════════════════════════════════════════════════════════════════════════════{C.X}")
+            print(f"{C.G}🎯 Target: {self.target}  │  ⚙️ Mode: {self.mode.upper()}  │  🔬 Deep: {'ON' if self.deep else 'OFF'}  │  🧵 Threads: {self.threads}{C.X}")
+            print(f"{C.C}══════════════════════════════════════════════════════════════════════════════════{C.X}\n")
         
-        self.log(f"Report saved to {output_file}", "SUCCESS")
+        r = self.fetch(self.target)
+        if r:
+            detected = None
+            for waf, sigs in WAF_SIGS.items():
+                if any(s in str(r.headers).lower() or s in r.text.lower() for s in sigs):
+                    detected = waf
+                    break
+            if detected:
+                self.waf_info = {'detected': True, 'waf': detected}
+                self.log(f"WAF DETECTED: {detected}", "WAF")
+        
+        if self.mode in ['all', 'gobuster']: self.gobuster()
+        if self.mode in ['all', 'ffuf']: self.ffuf()
+        if self.mode in ['all', 'subdomain']: self.subdomain()
+        if self.mode in ['all', 'wayback']: self.wayback()
+        if self.mode in ['all', 'ghost']: self.ghost()
+        
+        if self.endpoints:
+            tests = [(u, m, s, t) for u, m, s, t in self.endpoints]
+            self._run(tests)
+        
+        return self.results
     
-    def export_json(self, output_file: str):
-        """Export findings as JSON."""
+    def display(self):
+        if not self.results:
+            print(f"\n{C.Y}[!] No endpoints found.{C.X}")
+            return
+        
+        st = defaultdict(int)
+        risks = defaultdict(int)
+        types = defaultdict(int)
+        for r in self.results:
+            st[r['status']] += 1
+            risks[r['risk']] += 1
+            types[r['type']] += 1
+        
+        print(f"\n{C.C}══════════════════════════════════════════════════════════════════════════════════{C.X}")
+        print(f"{C.G}{C.BD}✅ SCAN COMPLETE{C.X}")
+        print(f"{C.C}══════════════════════════════════════════════════════════════════════════════════{C.X}\n")
+        
+        if self.waf_info:
+            print(f"  {C.Y}🛡️ WAF: {self.waf_info['waf']}{C.X}\n")
+        
+        print(f"  {C.BD}STATUS CODES:{C.X}")
+        for s, c in sorted(st.items()):
+            col = C.G if s==200 else (C.Y if s in [401,403] else C.C if s in [301,302] else C.M if s>=500 else C.W)
+            print(f"    {col}{s}{C.X}: {c}")
+        
+        print(f"\n  {C.BD}RISK LEVELS:{C.X}")
+        print(f"    {C.R}CRITICAL: {risks.get('CRITICAL', 0)}{C.X}  {C.R}HIGH: {risks.get('HIGH', 0)}{C.X}  {C.Y}MEDIUM: {risks.get('MEDIUM', 0)}{C.X}  {C.B}LOW: {risks.get('LOW', 0)}{C.X}")
+        
+        print(f"\n  {C.BD}ENDPOINT TYPES:{C.X}")
+        for t, c in sorted(types.items(), key=lambda x: x[1], reverse=True)[:5]:
+            print(f"    {C.C}{t}{C.X}: {c}")
+        
+        print(f"\n{C.C}══════════════════════════════════════════════════════════════════════════════════{C.X}")
+        print(f"  {C.BD}📋 TOTAL ENDPOINTS: {len(self.results)}  │  🌐 SUBDOMAINS: {len(self.subdomains)}  │  🔥 VULNS: {len(self.vulns)}{C.X}")
+        print(f"{C.C}══════════════════════════════════════════════════════════════════════════════════{C.X}")
+        
+        critical = [r for r in self.results if r['risk'] in ['CRITICAL', 'HIGH']]
+        if critical:
+            print(f"\n{C.R}{C.BD}🔥 CRITICAL/HIGH FINDINGS:{C.X}")
+            for i, r in enumerate(critical[:10], 1):
+                print(f"  {i:>2}. {C.R}[{r['risk']}]{C.X} {r['url']}")
+        
+        if self.vulns:
+            print(f"\n{C.R}{C.BD}💀 VULNERABILITIES:{C.X}")
+            for v in self.vulns[:5]:
+                print(f"  {C.R}[{v['type']}]{C.X} {v['url']}")
+    
+    def export_json(self, fname):
         data = {
-            "target": self.target,
-            "scan_time": datetime.now().isoformat(),
-            "mode": "deep" if self.deep else "quick",
-            "total_findings": len(self.findings),
-            "crafted_by": "P.H.O.E.N.I.X",
-            "findings": [
-                {
-                    "url": f.url,
-                    "status_code": f.status_code,
-                    "source": f.source,
-                    "evidence": f.evidence,
-                    "risk": f.risk,
-                    "timestamp": f.timestamp
-                }
-                for f in self.findings
-            ]
+            'target': self.target, 'scan_id': self.scan_id, 'time': datetime.now().isoformat(),
+            'mode': self.mode, 'deep': self.deep, 'crafted_by': 'P.H.O.E.N.I.X',
+            'waf': self.waf_info, 'stats': {'endpoints': len(self.results), 'subdomains': len(self.subdomains), 'vulns': len(self.vulns)},
+            'findings': self.results, 'vulnerabilities': self.vulns, 'subdomains': self.subdomains
         }
-        
-        with open(output_file, 'w', encoding='utf-8') as f:
-            json.dump(data, f, indent=2)
-        
-        self.log(f"JSON export saved to {output_file}", "SUCCESS")
+        with open(fname, 'w', encoding='utf-8') as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
+        self.log(f"JSON saved: {fname}", "OK")
+    
+    def export_txt(self, fname):
+        with open(fname, 'w', encoding='utf-8') as f:
+            f.write(f"GHOSTROUTE PRO v6.0 - REPORT\n{'═'*60}\n\nTarget: {self.target}\nScan ID: {self.scan_id}\nTime: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
+            if self.waf_info: f.write(f"WAF: {self.waf_info['waf']}\n\n")
+            f.write(f"ENDPOINTS ({len(self.results)})\n{'─'*40}\n")
+            for r in self.results:
+                f.write(f"[{r['status']}] {r['method']} {r['url']} ({r['risk']})\n")
+            if self.vulns:
+                f.write(f"\nVULNERABILITIES ({len(self.vulns)})\n{'─'*40}\n")
+                for v in self.vulns: f.write(f"[{v['type']}] {v['url']}\n")
+        self.log(f"TXT saved: {fname}", "OK")
 
 # ============================================================================
-# INTERACTIVE MENU
+# INTERACTIVE
 # ============================================================================
-
-def interactive_menu():
-    """Display interactive menu for no-argument mode."""
-    print_banner()
+def interactive():
+    print(BANNER)
+    print(f"\n{C.G}🎯 Enter target URL:{C.X}")
+    t = input(f"{C.Y}   → {C.X}").strip()
+    if not t: return None, None, None
+    if not t.startswith(('http://', 'https://')): t = 'https://' + t
     
-    print(f"\n{Colors.GREEN}{Colors.BOLD}🎯 ENTER TARGET URL:{Colors.RESET}")
-    print(f"{Colors.CYAN}   (Example: https://example.com){Colors.RESET}")
-    target = input(f"{Colors.YELLOW}   → {Colors.RESET}").strip()
+    print(f"\n{C.G}🔍 Scan mode:{C.X}")
+    print(f"   1. ALL  2. Gobuster  3. FFUF  4. Subdomain  5. Wayback  6. Ghost")
+    m = input(f"{C.Y}   → Choice (1-6) [1]: {C.X}").strip()
+    modes = ['all', 'gobuster', 'ffuf', 'subdomain', 'wayback', 'ghost']
+    mode = modes[int(m)-1] if m.isdigit() and 1<=int(m)<=6 else 'all'
     
-    if not target:
-        print(f"\n{Colors.RED}❌ No target provided. Exiting...{Colors.RESET}")
-        sys.exit(1)
-    
-    if not target.startswith(('http://', 'https://')):
-        target = 'https://' + target
-    
-    print(f"\n{Colors.GREEN}{Colors.BOLD}🔍 SELECT SCAN MODE:{Colors.RESET}")
-    print(f"   {Colors.CYAN}1.{Colors.RESET} {Colors.GREEN}Quick Scan{Colors.RESET} - Fast (2-3 min) - Recommended for initial recon")
-    print(f"   {Colors.CYAN}2.{Colors.RESET} {Colors.BLUE}Deep Scan{Colors.RESET} - Comprehensive (5-10 min) - Includes Wayback Machine")
-    
-    mode = input(f"\n{Colors.YELLOW}   → Enter choice (1/2) [default: 1]: {Colors.RESET}").strip()
-    deep = (mode == '2')
-    
-    print(f"\n{Colors.GREEN}{Colors.BOLD}💾 SAVE REPORT?{Colors.RESET}")
-    print(f"   {Colors.CYAN}1.{Colors.RESET} No (just display results)")
-    print(f"   {Colors.CYAN}2.{Colors.RESET} Text report (.txt)")
-    print(f"   {Colors.CYAN}3.{Colors.RESET} JSON export (.json)")
-    print(f"   {Colors.CYAN}4.{Colors.RESET} Both formats")
-    
-    report_choice = input(f"\n{Colors.YELLOW}   → Enter choice (1-4) [default: 1]: {Colors.RESET}").strip()
-    
-    return target, deep, report_choice
+    print(f"\n{C.G}🔬 Deep scan (SQLi, XSS, LFI)?{C.X}")
+    d = input(f"{C.Y}   → (y/n) [n]: {C.X}").strip().lower()
+    return t, mode, d == 'y'
 
 # ============================================================================
-# MAIN ENTRY POINT
+# MAIN
 # ============================================================================
-
 def main():
-    """Main entry point."""
-    parser = argparse.ArgumentParser(
-        description="👻 GhostRoute Pro - Find hidden endpoints in commented code",
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog=f"""
-{Colors.CYAN}{Colors.BOLD}╔══════════════════════════════════════════════════════════════════════════════╗
-║                              📖 EXAMPLES                                       ║
-╚══════════════════════════════════════════════════════════════════════════════╝{Colors.RESET}
-
-  {Colors.GREEN}# Interactive mode (no arguments){Colors.RESET}
-  python ghostroute.py
-
-  {Colors.GREEN}# Quick scan{Colors.RESET}
-  python ghostroute.py --target https://example.com --quick
-
-  {Colors.GREEN}# Deep scan with all modules{Colors.RESET}
-  python ghostroute.py --target https://example.com --deep
-
-  {Colors.GREEN}# Save reports{Colors.RESET}
-  python ghostroute.py -t https://example.com -q -o report.txt
-  python ghostroute.py -t https://example.com -d --json findings.json
-  python ghostroute.py -t https://example.com -d -o report.txt --json data.json
-
-  {Colors.GREEN}# Advanced options{Colors.RESET}
-  python ghostroute.py -t https://example.com --threads 20 --timeout 10 -v
-
-{Colors.CYAN}{Colors.BOLD}╔══════════════════════════════════════════════════════════════════════════════╗
-║                    🛠️  CRAFTED BY: P.H.O.E.N.I.X                               ║
-╚══════════════════════════════════════════════════════════════════════════════╝{Colors.RESET}
-        """
-    )
-    
-    parser.add_argument('--target', '-t', help='Target URL to scan')
-    parser.add_argument('--quick', '-q', action='store_true', help='Quick scan mode')
-    parser.add_argument('--deep', '-d', action='store_true', help='Deep scan mode (includes Wayback)')
-    parser.add_argument('--threads', type=int, default=10, help='Number of threads (default: 10)')
-    parser.add_argument('--timeout', type=int, default=5, help='Request timeout in seconds (default: 5)')
-    parser.add_argument('--output', '-o', help='Save text report to file')
-    parser.add_argument('--json', '-j', help='Export findings as JSON')
-    parser.add_argument('--verbose', '-v', action='store_true', help='Verbose output')
-    parser.add_argument('--version', action='version', version='GhostRoute Pro v2.0.0 - Crafted by P.H.O.E.N.I.X')
+    parser = argparse.ArgumentParser(add_help=False)
+    parser.add_argument('-t', '--target')
+    parser.add_argument('-m', '--mode', default='all')
+    parser.add_argument('-d', '--deep', action='store_true')
+    parser.add_argument('--threads', type=int, default=30)
+    parser.add_argument('--timeout', type=int, default=8)
+    parser.add_argument('-v', '--verbose', action='store_true')
+    parser.add_argument('-s', '--silent', action='store_true')
+    parser.add_argument('--proxy')
+    parser.add_argument('--cookie')
+    parser.add_argument('--json')
+    parser.add_argument('--txt')
+    parser.add_argument('-h', '--help', action='store_true')
     
     args = parser.parse_args()
     
-    # Interactive mode if no target provided
+    if args.help or len(sys.argv) == 1:
+        print(BANNER)
+        print(COMMANDS)
+        if len(sys.argv) == 1:
+            t, m, d = interactive()
+            if not t: return 1
+            args.target, args.mode, args.deep = t, m, d
+        else: return 0
+    
     if not args.target:
-        target, deep, report_choice = interactive_menu()
-        threads = 10
-        timeout = 5
-        verbose = False
-        output_file = None
-        json_file = None
-        
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        
-        if report_choice == '2':
-            output_file = f"ghostroute_report_{timestamp}.txt"
-        elif report_choice == '3':
-            json_file = f"ghostroute_findings_{timestamp}.json"
-        elif report_choice == '4':
-            output_file = f"ghostroute_report_{timestamp}.txt"
-            json_file = f"ghostroute_findings_{timestamp}.json"
-    else:
-        target = args.target
-        deep = args.deep
-        threads = args.threads
-        timeout = args.timeout
-        verbose = args.verbose
-        output_file = args.output
-        json_file = args.json
+        print(f"{C.R}[-] Target required!{C.X}")
+        return 1
     
-    # Print banner for command-line mode
-    if args.target:
-        print_banner()
+    if not args.target.startswith(('http://', 'https://')):
+        args.target = 'https://' + args.target
     
-    mode_str = "Deep" if deep else "Quick"
-    print_scan_header(target, mode_str, threads)
+    cookies = {}
+    if args.cookie:
+        for c in args.cookie.split(';'):
+            if '=' in c: k, v = c.strip().split('=', 1); cookies[k] = v
     
-    # Create scanner
-    scanner = GhostRouteScanner(
-        target=target,
-        threads=threads,
-        timeout=timeout,
-        deep=deep,
-        verbose=verbose
-    )
+    scanner = GhostRoute(target=args.target, mode=args.mode, threads=args.threads, timeout=args.timeout,
+                         verbose=args.verbose, silent=args.silent, deep=args.deep,
+                         cookies=cookies, proxy=args.proxy)
     
-    # Run scan
-    start_time = time.time()
-    findings = scanner.scan()
-    elapsed = time.time() - start_time
+    start = time.time()
+    scanner.scan()
     
-    # Count by risk
-    high = len([f for f in findings if f.risk == "HIGH"])
-    medium = len([f for f in findings if f.risk == "MEDIUM"])
-    low = len([f for f in findings if f.risk == "LOW"])
+    if not args.silent:
+        print(f"\n{C.G}⏱️  Completed in {time.time()-start:.2f}s{C.X}")
     
-    # Print footer
-    print_scan_footer(len(findings), high, medium, low, elapsed)
+    scanner.display()
     
-    # Display results
-    if findings:
-        print(f"{Colors.CYAN}{Colors.BOLD}📋 TOP FINDINGS:{Colors.RESET}\n")
-        for i, finding in enumerate(findings[:10], 1):
-            if finding.risk == "HIGH":
-                risk_display = f"{Colors.RED}[HIGH]{Colors.RESET}"
-            elif finding.risk == "MEDIUM":
-                risk_display = f"{Colors.YELLOW}[MEDIUM]{Colors.RESET}"
-            else:
-                risk_display = f"{Colors.BLUE}[LOW]{Colors.RESET}"
-            
-            print(f"  {Colors.WHITE}{i}.{Colors.RESET} {risk_display} {Colors.CYAN}{finding.url}{Colors.RESET}")
-            source_short = finding.source[:60] + "..." if len(finding.source) > 60 else finding.source
-            print(f"     {Colors.GREEN}└──{Colors.RESET} Status: {finding.status_code} | Source: {source_short}")
-        print()
+    ts = datetime.now().strftime('%Y%m%d_%H%M%S')
+    scanner.export_json(args.json or f"ghostroute_{scanner.scan_id}.json")
+    scanner.export_txt(args.txt or f"ghostroute_{scanner.scan_id}.txt")
     
-    # Generate reports
-    if output_file:
-        scanner.generate_report(output_file)
-    
-    if json_file:
-        scanner.export_json(json_file)
-    
-    # Print credit
-    print_credit()
-    
-    # Return code
-    return 1 if high > 0 else 0
+    if not args.silent: print(CREDIT)
+    return 0
 
 if __name__ == "__main__":
-    try:
-        sys.exit(main())
-    except KeyboardInterrupt:
-        print(f"\n\n{Colors.YELLOW}⚠️  Scan interrupted by user{Colors.RESET}")
-        print_credit()
-        sys.exit(130)
-    except Exception as e:
-        print(f"\n{Colors.RED}❌ Fatal error: {e}{Colors.RESET}")
-        print_credit()
-        sys.exit(1)
+    try: sys.exit(main())
+    except KeyboardInterrupt: print(f"\n{C.Y}[!] Interrupted{C.X}"); sys.exit(130)
